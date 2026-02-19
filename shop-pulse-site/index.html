@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Shop Pulse — AI estimating + client communication for manufacturers. Plugs into your ERP to help you quote and close faster." />
+  <title>Shop Pulse — AI Estimating for Manufacturers</title>
+  <style>
+    :root{
+      --bg: #0b0f19;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --border: rgba(255,255,255,.14);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1120px;
+      --accent: #7dd3fc; /* light blue */
+      --accent2:#a7f3d0; /* mint */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% 10%, rgba(125,211,252,.18), transparent 55%),
+        radial-gradient(1000px 700px at 90% 20%, rgba(167,243,208,.14), transparent 55%),
+        radial-gradient(900px 600px at 30% 90%, rgba(129,140,248,.10), transparent 55%),
+        var(--bg);
+      line-height:1.35;
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:22px 18px 70px}
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(11,15,25,.85), rgba(11,15,25,.55));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav{
+      max-width:var(--max); margin:0 auto; padding:14px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px}
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background: linear-gradient(135deg, rgba(125,211,252,.9), rgba(167,243,208,.85));
+      box-shadow: 0 10px 30px rgba(125,211,252,.18);
+    }
+    .navlinks{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+    .navlinks a{
+      text-decoration:none;
+      color:var(--muted);
+      font-weight:600;
+      font-size:14px;
+      padding:8px 10px;
+      border-radius:12px;
+    }
+    .navlinks a:hover{color:var(--text); background: rgba(255,255,255,.06)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:14px;
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+      box-shadow: none;
+    }
+    .btn:hover{background: rgba(255,255,255,.10)}
+    .btn.primary{
+      border-color: rgba(125,211,252,.55);
+      background: linear-gradient(135deg, rgba(125,211,252,.22), rgba(167,243,208,.14));
+    }
+    .hero{
+      padding:52px 0 26px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:22px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr; padding-top:38px}
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.05);
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
+      width: fit-content;
+    }
+    .pill .dot{
+      width:8px;height:8px;border-radius:99px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(125,211,252,.14);
+    }
+    h1{
+      margin:14px 0 10px;
+      font-size:52px;
+      line-height:1.02;
+      letter-spacing:-1px;
+    }
+    @media (max-width: 560px){ h1{font-size:40px} }
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:18px;
+      max-width: 60ch;
+    }
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .mini{
+      margin-top:14px;
+      color: rgba(255,255,255,.62);
+      font-size:13px;
+    }
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(to bottom, rgba(255,255,255,.07), rgba(255,255,255,.05));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .heroCard{padding:18px}
+    .metrics{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    .metric{
+      padding:14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    .metric b{display:block; font-size:18px}
+    .metric span{color: var(--muted); font-size:13px}
+    .section{padding:34px 0 0}
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    @media (max-width: 980px){ .grid3{grid-template-columns:1fr} }
+    h2{
+      margin:0 0 12px;
+      font-size:28px;
+      letter-spacing:-.3px;
+    }
+    .lead{color:var(--muted); margin:0 0 18px; max-width:80ch}
+    .feature{padding:18px}
+    .kicker{
+      font-weight:800;
+      color: rgba(255,255,255,.9);
+      margin:0 0 6px;
+    }
+    .desc{margin:0; color:var(--muted)}
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){ .twoCol{grid-template-columns:1fr} }
+    .block{padding:18px}
+    .list{
+      margin:12px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .list li{
+      display:flex; gap:10px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      color: rgba(255,255,255,.80);
+      font-weight:600;
+    }
+    .check{
+      width:18px;height:18px;border-radius:6px;
+      background: linear-gradient(135deg, rgba(125,211,252,.35), rgba(167,243,208,.25));
+      border: 1px solid rgba(125,211,252,.35);
+      flex:0 0 auto;
+      margin-top:2px;
+    }
+    form{display:grid; gap:10px; margin-top:12px}
+    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    @media (max-width: 560px){ .row2{grid-template-columns:1fr} }
+    label{font-size:12px; color: rgba(255,255,255,.68); font-weight:700}
+    input{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(5,8,15,.55);
+      color: var(--text);
+      outline:none;
+    }
+    input:focus{border-color: rgba(125,211,252,.55)}
+    .fine{font-size:12px; color: rgba(255,255,255,.56); margin:0}
+    .toast{
+      display:none;
+      margin-top:10px;
+      padding:12px;
+      border-radius: 14px;
+      border:1px solid rgba(167,243,208,.35);
+      background: rgba(167,243,208,.12);
+      color: rgba(255,255,255,.88);
+      font-weight:700;
+    }
+    footer{
+      margin-top: 46px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.55);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:13px;
+    }
+    .smallLinks a{color: rgba(255,255,255,.60); text-decoration:none; margin-right:12px}
+    .smallLinks a:hover{color: rgba(255,255,255,.88)}
+    .anchor{scroll-margin-top: 90px;}
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>Shop Pulse</div>
+      </div>
+      <nav class="navlinks">
+        <a href="#product">Product</a>
+        <a href="#mission">Mission</a>
+        <a href="#founder">Team</a>
+        <a href="#waitlist" class="btn primary">Join waitlist</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <div class="pill"><span class="dot"></span>AI estimating + client communication • plugs into your ERP</div>
+        <h1>Estimate faster. Close faster. Grow smarter.</h1>
+        <p class="sub">
+          Shop Pulse helps manufacturers respond to RFQs with speed and confidence.
+          Get AI-assisted estimates, transparent assumptions, and polished client replies—without replacing your existing ERP.
+        </p>
+
+        <div class="ctaRow">
+          <a class="btn primary" href="#waitlist">Join the early access list</a>
+          <a class="btn" href="#product">See how it works</a>
+        </div>
+        <p class="mini">No migrations. Human-in-the-loop AI. Built for CNC & custom manufacturing.</p>
+      </div>
+
+      <aside class="card heroCard">
+        <h2 style="margin:0 0 10px; font-size:18px;">What you get</h2>
+        <div class="metrics">
+          <div class="metric">
+            <b>Hours, not days</b>
+            <span>Faster quote turnaround</span>
+          </div>
+          <div class="metric">
+            <b>Clear assumptions</b>
+            <span>Materials + cycle time visibility</span>
+          </div>
+          <div class="metric">
+            <b>More wins</b>
+            <span>Better follow-ups & responses</span>
+          </div>
+          <div class="metric">
+            <b>ERP-friendly</b>
+            <span>Integrates, doesn’t replace</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="product" class="section anchor">
+      <h2>What Shop Pulse does</h2>
+      <p class="lead">
+        We connect your quoting workflow to the data you already have—then use AI to reduce manual work,
+        improve response quality, and help you convert more RFQs into real revenue.
+      </p>
+
+      <div class="grid3">
+        <div class="card feature">
+          <div class="kicker">AI-assisted estimating</div>
+          <p class="desc">
+            Draft quotes using historical jobs, part details, and cost drivers—then let your estimator review and finalize.
+          </p>
+        </div>
+        <div class="card feature">
+          <div class="kicker">ERP integration</div>
+          <p class="desc">
+            Plug into your existing ERP. No migration. No “rip and replace.” Keep your current process—just faster.
+          </p>
+        </div>
+        <div class="card feature">
+          <div class="kicker">Transparent calculations</div>
+          <p class="desc">
+            No black box outputs. See the assumptions behind price: materials, cycle time, and similar historical work.
+          </p>
+        </div>
+        <div class="card feature">
+          <div class="kicker">Client communication</div>
+          <p class="desc">
+            Generate clear, professional replies to RFQs, clarify missing details, and send follow-ups that move deals forward.
+          </p>
+        </div>
+        <div class="card feature">
+          <div class="kicker">Lead & deal velocity</div>
+          <p class="desc">
+            Faster responses tend to win. Shop Pulse helps you keep momentum while you’re busy running the floor.
+          </p>
+        </div>
+        <div class="card feature">
+          <div class="kicker">Built for real shops</div>
+          <p class="desc">
+            Designed for CNC and custom manufacturing realities: variability, edge cases, and human judgment.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="mission" class="section anchor">
+      <div class="twoCol">
+        <div class="card block">
+          <h2 style="margin:0 0 10px;">Our mission</h2>
+          <p class="lead" style="margin:0;">
+            Manufacturing runs on precision—but quoting is still slow, manual, and hard to scale.
+            Shop Pulse exists to modernize estimating with AI that’s transparent, practical, and ERP-native.
+          </p>
+          <ul class="list">
+            <li><span class="check" aria-hidden="true"></span> Reduce quote turnaround time</li>
+            <li><span class="check" aria-hidden="true"></span> Increase win rates through better responses</li>
+            <li><span class="check" aria-hidden="true"></span> Improve margin confidence with clearer assumptions</li>
+            <li><span class="check" aria-hidden="true"></span> Keep humans in control of final pricing</li>
+          </ul>
+        </div>
+
+        <div class="card block">
+          <h2 style="margin:0 0 10px;">Why now</h2>
+          <p class="lead" style="margin:0 0 8px;">
+            The shops that respond fastest—and communicate clearest—win more work.
+          </p>
+          <p class="desc">
+            Shop Pulse is the bridge between your sales pipeline and your production reality:
+            speed where it matters, and visibility where it’s required.
+          </p>
+          <div style="height:12px"></div>
+          <div class="pill"><span class="dot"></span>Augment the estimator • don’t replace them</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="founder" class="section anchor">
+      <div class="card block">
+        <h2 style="margin:0 0 10px;">Team</h2>
+        <p class="lead" style="margin:0 0 10px;">
+          Right now it’s just me—building carefully, with real shop workflows in mind.
+        </p>
+        <p class="desc" style="margin:0;">
+          <b>Ali Tohidi</b> — Founder<br/>
+          Full-stack + product background in manufacturing ERP and quoting workflows. Building Shop Pulse to bring speed, clarity,
+          and practical AI into estimating and client communication.
+        </p>
+      </div>
+    </section>
+
+    <section id="waitlist" class="section anchor">
+      <div class="card block">
+        <h2 style="margin:0 0 10px;">Join the Early Access List</h2>
+        <p class="lead" style="margin:0 0 6px;">
+          We’re onboarding a small group of forward-thinking shops.
+          If you want beta access and early adopter pricing, join the waitlist.
+        </p>
+        <p class="fine">This form stores your info in your browser only (demo). To collect real signups, see the GitHub Pages section below.</p>
+
+        <form id="waitlistForm">
+          <div class="row2">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" name="name" placeholder="Your name" required />
+            </div>
+            <div>
+              <label for="company">Company</label>
+              <input id="company" name="company" placeholder="Shop name" required />
+            </div>
+          </div>
+
+          <div class="row2">
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="you@company.com" required />
+            </div>
+            <div>
+              <label for="erp">ERP System</label>
+              <input id="erp" name="erp" placeholder="e.g., ProShop, JobBOSS, Epicor..." />
+            </div>
+          </div>
+
+          <button class="btn primary" type="submit">Join Shop Pulse</button>
+          <div id="toast" class="toast">✅ You’re on the list (saved locally for now).</div>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> Shop Pulse. All rights reserved.</div>
+      <div class="smallLinks">
+        <a href="#product">Product</a>
+        <a href="#mission">Mission</a>
+        <a href="#waitlist">Waitlist</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // simple demo "signup": stores locally so GitHub Pages works without a backend
+    const form = document.getElementById('waitlistForm');
+    const toast = document.getElementById('toast');
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const list = JSON.parse(localStorage.getItem('shop_pulse_waitlist') || '[]');
+      list.push({ ...data, ts: new Date().toISOString() });
+      localStorage.setItem('shop_pulse_waitlist', JSON.stringify(list));
+      toast.style.display = 'block';
+      form.reset();
+      setTimeout(() => toast.style.display = 'none', 3500);
+    });
+  </script>
+</body>
+</html>
